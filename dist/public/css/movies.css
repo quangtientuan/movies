@@ -1,0 +1,33 @@
+h1 {
+    color:blue;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+}
+
+.navbar
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    color: blueviolet;
+}
+
+.navitem {
+    display: inline;
+    margin-right: 20px;
+    color: blue;
+}
+
+.navlink {
+    color: white;
+    text-decoration: none;
+}
+
+table.block-table{
+    display: block;
+    overflow-x: auto;
+    width: fit-content;
+}

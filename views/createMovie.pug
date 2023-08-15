@@ -1,0 +1,24 @@
+extends layout
+block content
+
+    h1 Ajouter un nouveau film
+
+    form(action="/submit" method="post")
+
+      label(for="titre") Titre du film
+      br
+      input(type="text" name="titre" required)
+      br
+      
+      label(for="synopsis") Synopsis
+      br
+      input(type="text" name="synopsis" required)
+      br
+    
+      label(for="version") Version
+      br
+      input(type="number" name="version" required)
+      br
+      br
+      button(type="submit") Ajouter le film
+        
