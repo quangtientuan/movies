@@ -31,3 +31,23 @@ table.block-table{
     overflow-x: auto;
     width: fit-content;
 }
+
+/* Pour mettre les images cotes a cotes */
+.movie {
+    /* display: flex; */
+    display: inline-block;
+    align-items: center;
+    margin: 10px;
+    width: 200px; 
+    height: 300px;
+    border: 3px solid red;
+  }
+
+h4.center-div{
+    text-align: center;
+}
+
+img.fit-div { 
+    width: 100%;
+    height: 100%
+}

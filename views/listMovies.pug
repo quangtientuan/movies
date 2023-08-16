@@ -4,7 +4,11 @@ block content
   h1 Afficher la liste des films
   p C'est le contenu de la liste des films.
   //- const allMovies : IMovie[]
-  ul
-  each movie in allMovies
-    li #{movie.title}
-      
+  div
+    each movie in allMovies
+      //- li #{movie.title}
+      div.movie
+        img.fit-div(src=movie.image, alt="Description de l'image")
+        //- img(src=movie.image, alt='Description de l\'image')
+
+        h4.center-div #{movie.title}

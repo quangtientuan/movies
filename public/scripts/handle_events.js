@@ -1,14 +1,19 @@
 // Si vous modifiez ce fichier, exécutez "npm run build" pour que votre server utilise la nouvelle version. 
 // Sinon le navigateur conserve l'ancienne version en cache.
 window.addEventListener("load", function () {
+    const fileInput = document.getElementById('fileInput');
+    const filePath = document.getElementById('filePath');
 
-
-    // dropdownList.addEventListener('change', function () {
-    // });
-
-    // document.getElementById("valider-button").addEventListener("click", function() {
-    // Remove all existing options from the dropdown
-
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            //filePath.textContent = 'Chemin de l\'image sélectionnée : ' + fileName;
+            filePath.value = 'Chemin de l\'image sélectionnée : ' + fileName;
+            console.log(fileFullPath); // Affichez le chemin complet dans la console
+        } else {
+            filePath.textContent = '';
+        }
+    });
 });
 
 
