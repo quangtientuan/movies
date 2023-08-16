@@ -26,7 +26,9 @@ class ControllerMovie {
             try {
                 // Récupérer tous les films triés par title.
                 console.log("Entrer dans cette fonction : listeMovie");
-                const allMovies = yield modelMovie_1.default.find().sort({ title: 1 });
+                // const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
+                const allMovies = yield modelMovie_1.default.find().lean().sort({ title: 1 });
+                //allMovies.sort((a, b) => a.title.localeCompare(b.title));
                 res.status(200).render('listMovies', {
                     allMovies: allMovies
                 });
@@ -37,17 +39,34 @@ class ControllerMovie {
         });
     }
     createMovie(req, res, next) {
-        try {
-            if (req.method === 'GET') {
-                res.status(200).render('createMovie', {});
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (req.method === 'GET') {
+                    res.status(200).render('createMovie', {});
+                }
+                else if (req.method === 'POST') {
+                    const title = req.body.title;
+                    const synopsis = req.body.synopsis;
+                    const path = req.body.filePath;
+                    const version = req.body.version;
+                    console.log(title);
+                    console.log(synopsis);
+                    console.log(path);
+                    console.log(version);
+                    const movie = {
+                        title: req.body.title,
+                        synopsis: req.body.synopsis,
+                        image: req.body.filePath,
+                        __v: req.body.version
+                    };
+                    yield modelMovie_1.default.create(movie);
+                    res.status(200).send('readMovie - Insérer un movie dans le db.');
+                }
             }
-            else if (req.method === 'POST') {
-                res.status(200).send('readMovie - Insérer un movie dans le db.');
+            catch (error) {
+                console.log(error);
             }
-        }
-        catch (error) {
-            console.log(error);
-        }
+        });
     }
     // ***
     // * Retourne un movie.

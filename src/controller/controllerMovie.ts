@@ -14,7 +14,10 @@ export class ControllerMovie {
         try {
             // Récupérer tous les films triés par title.
             console.log("Entrer dans cette fonction : listeMovie");
-            const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
+            // const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
+            const allMovies: IMovie[] = await modelMovie.find().lean().sort({ title: 1 });
+            //allMovies.sort((a, b) => a.title.localeCompare(b.title));
+
             res.status(200).render('listMovies', {
                 allMovies: allMovies
             });
@@ -23,17 +26,32 @@ export class ControllerMovie {
         }
     }
 
-    public createMovie(req: Request, res: Response, next: NextFunction) {
+    public async createMovie(req: Request, res: Response, next: NextFunction) {
         try {
             if (req.method === 'GET') {
                 res.status(200).render('createMovie', {});
             } else if (req.method === 'POST') {
-                res.status(200).send(
-                    'readMovie - Insérer un movie dans le db.');     
-            }
-        } catch (error) {
-            console.log(error);
-        }
+                const title = req.body.title;
+                const synopsis = req.body.synopsis;
+                const path = req.body.filePath;
+                const version = req.body.version;
+                console.log(title);
+                console.log(synopsis);
+                console.log(path);
+                console.log(version);
+                const movie = {
+                    title: req.body.title as string,
+                    synopsis :req.body.synopsis as string, 
+                    image: req.body.filePath as string, 
+                    __v: req.body.version as number};
+                await modelMovie.create(movie);
+        
+        res.status(200).send(
+            'readMovie - Insérer un movie dans le db.');
+    }
+} catch (error) {
+    console.log(error);
+}
     }
 
     // ***

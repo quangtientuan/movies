@@ -3,19 +3,19 @@ block content
 
     h1 Ajouter un nouveau film
 
-    form(action="/submit" method="post")
+    form(action="/api/movies/createMovie" method="post")
 
-      label(for="titre") Titre du film 
+      label(for="title") Titre du film 
       br
-      input(type="text" name="titre" required)
+      input(type="text" id="title" name="title" required)
       br
       
       label(for="synopsis") Synopsis
       br
-      input(type="text" name="synopsis" required)
+      input(type="text" id="synopsis" name="synopsis" required)
       br
     
-      input(type="file", name="fileUpload", id="fileInput")
+      input(type="file" id="fileUpload" name="fileUpload" required)
       br
       input(type="text" id="filePath" name="filePath" required)
       br
@@ -24,7 +24,7 @@ block content
       // -- Version      
       label(for="version") Version
       br
-      input(type="number" name="version" required)
+      input(type="number" id="version" name="version" required)
       br
 
       br
