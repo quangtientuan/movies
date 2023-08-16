@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import modelMovie, { IMovie } from '../model/modelMovie';
-import { isNullOrUndefined } from 'util';
 
 export class ControllerMovie {
     constructor() {
@@ -9,14 +8,18 @@ export class ControllerMovie {
     // ***
     // * Retourne la liste de movies.
     // * http://localhost:3020/api/movies
+    // * Méthode    : GET.
     // ***
     public async listMovie(req: Request, res: Response, next: NextFunction) {
         try {
             // Récupérer tous les films triés par title.
             console.log("Entrer dans cette fonction : listeMovie");
-            // const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
-            const allMovies: IMovie[] = await modelMovie.find().lean().sort({ title: 1 });
-            //allMovies.sort((a, b) => a.title.localeCompare(b.title));
+
+            // On veut trier le titre en ordre ascendant 
+            const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
+
+            //  Patch si le trie ne fonctionne pas.
+            //  allMovies.sort((a, b) => a.title.localeCompare(b.title));
 
             res.status(200).render('listMovies', {
                 allMovies: allMovies
@@ -54,6 +57,36 @@ export class ControllerMovie {
 }
     }
 
+
+    // ***
+    // * Retourne un movie.
+    // * Méthode    : POST.
+    // * Req        : req.param.idMovie.
+    // ***
+    public detailMovie(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.status(200).send(
+                'detailMovie - retourne un movie dans le db.'
+            );
+        } catch (error) {
+        }
+    }
+
+    // ***
+    // * Retourne les informations du film.
+    // * Méthode    : GET.
+    // * Req        : req.param.idMovie.
+    // ***
+    public getDetailMovie(req: Request, res: Response, next: NextFunction) {
+        try {
+            res.status(200).send(
+                'Il faut afficher le détail du film.'
+            );
+        } catch (error) {
+        }
+    }
+
+    
     // ***
     // * Retourne un movie.
     // * Méthode    : GET.

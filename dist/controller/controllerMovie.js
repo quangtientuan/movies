@@ -20,15 +20,17 @@ class ControllerMovie {
     // ***
     // * Retourne la liste de movies.
     // * http://localhost:3020/api/movies
+    // * Méthode    : GET.
     // ***
     listMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // Récupérer tous les films triés par title.
                 console.log("Entrer dans cette fonction : listeMovie");
-                // const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
-                const allMovies = yield modelMovie_1.default.find().lean().sort({ title: 1 });
-                //allMovies.sort((a, b) => a.title.localeCompare(b.title));
+                // On veut trier le titre en ordre ascendant 
+                const allMovies = yield modelMovie_1.default.find().sort({ title: 1 });
+                //  Patch si le trie ne fonctionne pas.
+                //  allMovies.sort((a, b) => a.title.localeCompare(b.title));
                 res.status(200).render('listMovies', {
                     allMovies: allMovies
                 });
@@ -67,6 +69,30 @@ class ControllerMovie {
                 console.log(error);
             }
         });
+    }
+    // ***
+    // * Retourne un movie.
+    // * Méthode    : POST.
+    // * Req        : req.param.idMovie.
+    // ***
+    detailMovie(req, res, next) {
+        try {
+            res.status(200).send('detailMovie - retourne un movie dans le db.');
+        }
+        catch (error) {
+        }
+    }
+    // ***
+    // * Retourne les informations du film.
+    // * Méthode    : GET.
+    // * Req        : req.param.idMovie.
+    // ***
+    getDetailMovie(req, res, next) {
+        try {
+            res.status(200).send('Il faut afficher le détail du film.');
+        }
+        catch (error) {
+        }
     }
     // ***
     // * Retourne un movie.
