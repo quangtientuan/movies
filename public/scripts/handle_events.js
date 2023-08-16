@@ -1,19 +1,44 @@
-// Si vous modifiez ce fichier, exécutez "npm run build" pour que votre server utilise la nouvelle version. 
-// Sinon le navigateur conserve l'ancienne version en cache.
 window.addEventListener("load", function () {
-    const fileUpload = document.getElementById('fileUpload');
-    const filePath = document.getElementById('filePath');
+  const fileUpload = document.getElementById('fileUpload');
+  const filePath = document.getElementById('filePath');
 
-    fileUpload.addEventListener('change', () => {
-        if (fileUpload.files.length > 0) {
-            const fileName = fileUpload.files[0].name;
-            //filePath.textContent = 'Chemin de l\'image sélectionnée : ' + fileName;
-            filePath.value = '/data/uploads/' + fileName;
-            console.log(fileFullPath); // Affichez le chemin complet dans la console
-        } else {
-            filePath.textContent = '';
-        }
-    });
+  fileUpload.addEventListener('change', () => {
+    if (fileUpload.files.length > 0) {
+      const fileName = fileUpload.files[0].name;
+      //filePath.textContent = 'Chemin de l\'image sélectionnée : ' + fileName;
+      filePath.value = '/data/uploads/' + fileName;
+      console.log(fileFullPath); // Affichez le chemin complet dans la console
+    } else {
+      filePath.textContent = '';
+    }
+  });
+
+  // function divClick(element) {
+  //     // alert('div click');
+  //     // Rediriger vers une nouvelle URL
+  //     window.location.href = "https://www.google.com";
+  // }
+
+  function divClick(element) {
+    // alert('div click');
+    // Rediriger vers une nouvelle URL
+    // window.location.href = "http://localhost:3020/api/movies/createMovie";
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // Exemple avec l'API Fetch pour une redirection avec une méthode HTTP spécifique
+    fetch("http://localhost:3020/api/movies/detailMovie", {
+      method: "POST", // Utilisez la méthode HTTP souhaitée (GET, POST, PUT, DELETE, etc.)
+      // Autres options de requête comme headers, body, etc.
+    })
+      .then(response => {
+        // Traitez la réponse si nécessaire
+        // Ensuite, effectuez la redirection
+        window.location.href = response.url;
+      })
+      .catch(error => {
+        console.error("Erreur lors de la requête :", error);
+      });
+  };
 });
 
 
