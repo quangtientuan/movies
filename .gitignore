@@ -1,3 +1,2 @@
-node_modules
-dist/tsconfig.tsbuildinfo
-dist/controller/controllerMovie.js.map
+node_modules/
+dist/
