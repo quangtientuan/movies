@@ -38,6 +38,7 @@ export class RouterMovie {
         // * Méthode : GET.
         // ****
         this._router.get('/createMovie', this._controllerMovie.createMovie.bind(this));
+        this._router.post('/createMovie', this._controllerMovie.createMovie.bind(this));
 
         // this._router.get('/:movieId', this._controllerMovie.readMovie.bind(this));
         // // Post-createMovie.
