@@ -28,10 +28,23 @@ class RouterMovie {
         this._router.get('/', this._controllerMovie.listMovie.bind(this));
         // ***
         // * Insérer un movie.
-        // * http://localhost:3020/api/createMovie
+        // * http://localhost:3020/api/movies/createMovie
         // * Méthode : GET.
         // ****
         this._router.get('/createMovie', this._controllerMovie.createMovie.bind(this));
+        // ***
+        // * Affiche le movie en détail.
+        // * http://localhost:3020/api/movies/detailMovie
+        // * Méthode : POST.
+        // * TODO : Vérifier,
+        // ****
+        this._router.post('/detailMovie', this._controllerMovie.detailMovie.bind(this));
+        // ***
+        // * Affiche le movie en détail.
+        // * http://localhost:3020/api/movies/detailMovie
+        // * Méthode : GET.
+        // ****
+        this._router.get('/detailMovie', this._controllerMovie.getDetailMovie.bind(this));
         this._router.post('/createMovie', this._controllerMovie.createMovie.bind(this));
         // this._router.get('/:movieId', this._controllerMovie.readMovie.bind(this));
         // // Post-createMovie.
