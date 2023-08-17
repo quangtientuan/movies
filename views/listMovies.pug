@@ -7,30 +7,34 @@ block content
   //- const allMovies : IMovie[]
   div
     each movie in allMovies
-      div.movie(onclick="divClick(this)")
+      div.movie(id=movie._id, onclick="divClick(this)")
         img.fit-div(src=movie.image, alt="Description de l'image")
         h4.center-div #{movie.title}
-        p #{movie._id}
 
 
   //- Script qui traite event onclick sur le div.
   script.
-    function divClick(element) {
-      // alert('div click');
+    function divClick(elemDiv) {
       // Rediriger vers une nouvelle URL
-      // window.location.href = "http://localhost:3020/api/movies/createMovie";
-
-      /////////////////////////////////////////////////////////////////////////////////
-      // Exemple avec l'API Fetch pour une redirection avec une méthode HTTP spécifique
-      fetch("http://localhost:3020/api/movies/detailMovie", {
-        method: "POST", // Utilisez la méthode HTTP souhaitée (GET, POST, PUT, DELETE, etc.)
-      })
-      .then(response => {
-        // Traitez la réponse si nécessaire
-        // Ensuite, effectuez la redirection
-        window.location.href = response.url;
-      })
-      .catch(error => {
-        console.error("Erreur lors de la requête :", error);
-      });
+      const idMovie = elemDiv.id;
+      window.location.href = "http://localhost:3020/api/movies/detailMovie/" + idMovie;
     };
+
+
+      //- /////////////////////////////////////////////////////////////////////////////////
+      //- // TODO : Comprendre le code après.
+      //- // Exemple avec l'API Fetch pour une redirection avec une méthode HTTP spécifique
+      //- fetch("http://localhost:3020/api/movies/detailMovie", {
+      //-   method: "POST", // Utilisez la méthode HTTP souhaitée (GET, POST, PUT, DELETE, etc.)
+      //-   ////////////////////////////////////////////////////////////////////////////////
+      //-   // On peut envoyer les donnés au serveur.
+      //-   ////////////////////////////////////////////////////////////////////////////////
+      //- })
+      //- .then(response => {
+      //-   // Traitez la réponse si nécessaire
+      //-   // Ensuite, effectuez la redirection
+      //-   window.location.href = response.url;
+      //- })
+      //- .catch(error => {
+      //-   console.error("Erreur lors de la requête :", error);
+      //- });

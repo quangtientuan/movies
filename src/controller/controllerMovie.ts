@@ -44,17 +44,18 @@ export class ControllerMovie {
                 console.log(version);
                 const movie = {
                     title: req.body.title as string,
-                    synopsis :req.body.synopsis as string, 
-                    image: req.body.filePath as string, 
-                    __v: req.body.version as number};
+                    synopsis: req.body.synopsis as string,
+                    image: req.body.filePath as string,
+                    __v: req.body.version as number
+                };
                 await modelMovie.create(movie);
-        
-        res.status(200).send(
-            'readMovie - Insérer un movie dans le db.');
-    }
-} catch (error) {
-    console.log(error);
-}
+
+                res.status(200).send(
+                    'readMovie - Insérer un movie dans le db.');
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 
@@ -72,53 +73,65 @@ export class ControllerMovie {
         }
     }
 
+
     // ***
     // * Retourne les informations du film.
     // * Méthode    : GET.
     // * Req        : req.param.idMovie.
+    // *////////////////////////////////////////
+    // * Ex: http://localhost:3020/api/movies/64dd29edc1dedd21c9df5bc1
     // ***
-    public getDetailMovie(req: Request, res: Response, next: NextFunction) {
+    public async getDetailMovie(req: Request, res: Response, next: NextFunction) {
         try {
-            res.status(200).send(
-                'Il faut afficher le détail du film.'
-            );
-        } catch (error) {
+            const movieId = req.params.idMovie;
+            const movie: IMovie = await modelMovie.findById(movieId);
+            if (movie) {
+                res.status(200).render('detailMovies', {
+                    movieDB: movie
+                });
+            }
+            else {
+                // Si le film n'est pas trouvé, renvoie une réponse 404
+                res.status(404).json({ error: 'Movie not found' });
+            }
+        }
+        catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
 
-    
     // ***
     // * Retourne un movie.
     // * Méthode    : GET.
     // * Req        : req.param.idMovie.
     // ***
     public readMovie(req: Request, res: Response, next: NextFunction) {
-    try {
-        res.status(200).send(
-            'readMovie - retourne un movie dans le db.'
-        );
-    } catch (error) {
+        try {
+            res.status(200).send(
+                'readMovie - retourne un movie dans le db.'
+            );
+        } catch (error) {
+        }
     }
-}
 
 
     public updateMovie(req: Request, res: Response, next: NextFunction) {
-    try {
-        res.status(200).send(
-            'updateMovie - update un movie dans le db'
-        );
-    } catch (error) {
+        try {
+            res.status(200).send(
+                'updateMovie - update un movie dans le db'
+            );
+        } catch (error) {
+        }
     }
-}
 
     public deleteMovie(req: Request, res: Response, next: NextFunction) {
-    try {
-        res.status(200).send(
-            'deleteMovie - deleteMovie un movie dans le db'
-        );
-    } catch (error) {
+        try {
+            res.status(200).send(
+                'deleteMovie - deleteMovie un movie dans le db'
+            );
+        } catch (error) {
+        }
     }
-}
 }
 
 // Create : POST www.example.com/customers
