@@ -4,5 +4,9 @@ html
   include includes/head.pug
   body
     include includes/header.pug
+    // Barre de recherche centrée
+    div.search-container
+        i.fa.fa-search
+        input(type="text", placeholder="Search")
     // Il faut afficher les données.
     block content
