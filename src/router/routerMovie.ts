@@ -52,7 +52,7 @@ export class RouterMovie {
         // * http://localhost:3020/api/movies/detailMovie
         // * Méthode : GET.
         // ****
-        this._router.get('/detailMovie', this._controllerMovie.getDetailMovie.bind(this));
+        this._router.get('/detailMovie/:idMovie' , this._controllerMovie.getDetailMovie.bind(this));
 
 
         this._router.post('/createMovie', this._controllerMovie.createMovie.bind(this));
