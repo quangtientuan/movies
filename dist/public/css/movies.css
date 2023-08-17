@@ -1,5 +1,6 @@
 h1 {
-    color:blue;
+    color: blue;
+    text-align: center;
 }
 
 nav {
@@ -7,8 +8,7 @@ nav {
     color: white;
 }
 
-.navbar
-{
+.navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -26,7 +26,7 @@ nav {
     text-decoration: none;
 }
 
-table.block-table{
+table.block-table {
     display: block;
     overflow-x: auto;
     width: fit-content;
@@ -38,17 +38,51 @@ table.block-table{
     display: inline-block;
     align-items: center;
     margin: 10px;
-    width: 200px; 
+    width: 200px;
     height: 300px;
     border: 3px solid red;
     cursor: pointer;
-  }
+}
 
-h4.center-div{
+h4.center-div {
     text-align: center;
 }
 
-img.fit-div { 
+img.fit-div {
     width: 100%;
     height: 100%
+}
+
+.search-container {
+    display: flex;
+    /* Centre horizontalement les éléments */
+    justify-content: center;
+    /* Centre verticalement les éléments */
+    align-items: center;
+
+    /* Ajustez la hauteur */
+    height: 100px;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 300px;
+    font-size: 14px;
+}
+
+.fa-search {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.detailMovieLeft {
+    display: inline-block;
+}
+
+.image {
+    float: right;
+    margin-right: 100px;
 }
