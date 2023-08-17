@@ -1,0 +1,24 @@
+extends layout
+block content
+    h1.center Détail du film: #{movieDB.title}
+
+    div.detailMovieLeft
+
+        <label for="title"> Titre du film </label> 
+        br
+        input(type="text" id="title" name="title" value = movieDB.title readonly)
+        br
+        
+        label(for="synopsis") Synopsis
+        br
+        textarea(name="synopsis", cols="70", rows="10", readonly)= movieDB.synopsis
+        br
+
+        // -- Version     
+        label(for="version") Version
+        br
+        input(type="number" id="version" name="version" value = movieDB.__v readonly)
+        br
+
+    div.image
+        img(src=movieDB.image, alt="Description de l'image")
