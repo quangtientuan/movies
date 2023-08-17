@@ -86,13 +86,28 @@ class ControllerMovie {
     // * Retourne les informations du film.
     // * Méthode    : GET.
     // * Req        : req.param.idMovie.
+    // *////////////////////////////////////////
+    // * Ex: http://localhost:3020/api/movies/64dd29edc1dedd21c9df5bc1
     // ***
     getDetailMovie(req, res, next) {
-        try {
-            res.status(200).send('Il faut afficher le détail du film.');
-        }
-        catch (error) {
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const movieId = req.params.idMovie;
+                const movie = yield modelMovie_1.default.findById(movieId);
+                if (movie) {
+                    res.status(200).render('detailMovies', {
+                        movieDB: movie
+                    });
+                }
+                else {
+                    // Si le film n'est pas trouvé, renvoie une réponse 404
+                    res.status(404).json({ error: 'Movie not found' });
+                }
+            }
+            catch (error) {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        });
     }
     // ***
     // * Retourne un movie.
