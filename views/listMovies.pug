@@ -7,24 +7,73 @@ block content
   //- const allMovies : IMovie[]
   div
     each movie in allMovies
-      div.movie(id=movie._id, onclick="divClick(this)")
-        img.fit-div(src=movie.image, alt="Description de l'image")
+      div.movie(id=movie._id)
+        input(type="checkbox")
+        a(href="/api/movies/detailMovie/" + movie._id)
+          img.fit-div(src=movie.image, alt="Description de l'image")
         h4.center-div #{movie.title}
+        i.fa.fa-trash
+
+    script.
+      var lstIcons = document.querySelectorAll('i');    
+
+      lstIcons.forEach((icon) => {
+        icon.addEventListener('click', function() {
+          // Code à exécuter lorsque l'icône est cliquée
+          //console.log('L\'icône a été cliquée !');
+          let resultat = window.confirm("Are you sure to delete?");
+
+          // La variable "resultat" contiendra la valeur entrée par l'utilisateur,
+          // ou null si l'utilisateur clique sur Annuler ou ferme la boîte de dialogue.
+
+          if (resultat === false) {
+              console.log("L'utilisateur a annulé.");
+          } else {
+              //console.log("Vous avez entré : " + resultat);
+              const idMovie = this.parentNode.id;
+              //console.log("id : " + idMovie);
+              fetch("/api/movies/deleteMovie/" + idMovie, {
+                  method: 'DELETE'
+              })
+              .then(response => {
+                  if (response.status === 204) {
+                      // Le film a été supprimé avec succès (204 signifie No Content)
+                      console.log('Film supprimé avec succès.');
+                      this.parentNode.remove();
+                  } else {
+                      // Gérer les erreurs ici
+                      console.error('Erreur lors de la suppression du film.');
+                  }
+              })
+              .catch(error => {
+                  console.error('Une erreur réseau s\'est produite.', error);
+              });
+          }
+          // Vous pouvez ajouter d'autres actions ici
+        });
+      })
 
 
   //- Script qui traite event onclick sur le div.
-  script.
-    function divClick(elemDiv) {
-      // Rediriger vers une nouvelle URL
-      const idMovie = elemDiv.id;
-      window.location.href = "http://localhost:3020/api/movies/detailMovie/" + idMovie;
+  //- script.
+  //-   function divClick(elemDiv) {
+  //-      // Phase de "bubbling" (remontée)
+  //-     elemDiv.addEventListener('click', function() {
+  //-       // Rediriger vers une nouvelle URL
+  //-       const idMovie = elemDiv.id;
+  //-       window.location.href = "http://localhost:3020/api/movies/detailMovie/" + idMovie;
+        
+
+  //-       //console.log("Clic sur le bouton");
+  //-     });
+
     };
 
 
       //- /////////////////////////////////////////////////////////////////////////////////
       //- // TODO : Comprendre le code après.
       //- // Exemple avec l'API Fetch pour une redirection avec une méthode HTTP spécifique
-      //- fetch("http://localhost:3020/api/movies/detailMovie", {
+      //- fetch("api/movies/detailMovie", {
       //-   method: "POST", // Utilisez la méthode HTTP souhaitée (GET, POST, PUT, DELETE, etc.)
       //-   ////////////////////////////////////////////////////////////////////////////////
       //-   // On peut envoyer les donnés au serveur.
