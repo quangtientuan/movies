@@ -13,7 +13,7 @@ export class ControllerMovie {
     public async listMovie(req: Request, res: Response, next: NextFunction) {
         try {
             // Récupérer tous les films triés par title.
-            console.log("Entrer dans cette fonction : listeMovie");
+            // console.log("Entrer dans cette fonction : listeMovie");
 
             // On veut trier le titre en ordre ascendant 
             const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
@@ -124,12 +124,18 @@ export class ControllerMovie {
         }
     }
 
-    public deleteMovie(req: Request, res: Response, next: NextFunction) {
+    public async deleteMovie(req: Request, res: Response, next: NextFunction) {
         try {
-            res.status(200).send(
-                'deleteMovie - deleteMovie un movie dans le db'
-            );
-        } catch (error) {
+            const movieId = req.params.idMovie;
+            const movie = await modelMovie.findByIdAndDelete(movieId);
+            if (movie) {
+                res.status(204).json({ success: 'Film supprimé avec succès' });
+            } else {
+                res.status(404).json({ error: 'Movie not found' });
+            }
+        }
+        catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
 }
