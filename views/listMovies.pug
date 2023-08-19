@@ -14,45 +14,69 @@ block content
         h4.center-div #{movie.title}
         i.fa.fa-trash
 
+    //- Capter le Event click sur un icône.
     script.
+
       var lstIcons = document.querySelectorAll('i');    
 
       lstIcons.forEach((icon) => {
         icon.addEventListener('click', function() {
-          // Code à exécuter lorsque l'icône est cliquée
-          //console.log('L\'icône a été cliquée !');
           let resultat = window.confirm("Are you sure to delete?");
-
-          // La variable "resultat" contiendra la valeur entrée par l'utilisateur,
-          // ou null si l'utilisateur clique sur Annuler ou ferme la boîte de dialogue.
-
           if (resultat === false) {
               console.log("L'utilisateur a annulé.");
           } else {
-              //console.log("Vous avez entré : " + resultat);
               const idMovie = this.parentNode.id;
-              //console.log("id : " + idMovie);
               fetch("/api/movies/deleteMovie/" + idMovie, {
                   method: 'DELETE'
               })
               .then(response => {
                   if (response.status === 204) {
                       // Le film a été supprimé avec succès (204 signifie No Content)
-                      console.log('Film supprimé avec succès.');
+                      console.log("Film supprimé avec succès.");
                       this.parentNode.remove();
                   } else {
                       // Gérer les erreurs ici
-                      console.error('Erreur lors de la suppression du film.');
+                      console.error("Erreur lors de la suppression du film.");
                   }
               })
               .catch(error => {
-                  console.error('Une erreur réseau s\'est produite.', error);
+                  console.error("Une erreur réseau s'est produite.", error);
               });
           }
-          // Vous pouvez ajouter d'autres actions ici
         });
       })
+ 
+      // ***
+      //-  Capter le message click sur le checkbox.
+      // ***
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      for (var checkbox of checkboxes)
+      {
+        checkbox.addEventListener('click', (event) =>
+        {
+          var found = false;
 
+          // On récupère le checkbox qui est cliqué
+          var checkBoxClick = event.target;
+          // J'aimerais chercher tous les siblings.
+          var nextSibling = checkBoxClick.nextElementSibling;
+          // Je veux parcourir tous les siblings et je veux trouver élément <icon>
+
+          while((nextSibling) && (!found)) {
+            // Je veux chercher icone et j'ai trouvé.
+            if (nextSibling.tagName.toUpperCase() === "I") {
+              if (event.target.checked) {
+                nextSibling.style.display = 'block';
+                found = true;
+              }
+              else {
+                nextSibling.style.display = 'none';
+              }
+            }
+            nextSibling = nextSibling.nextElementSibling;
+          }
+        });
+     }
 
   //- Script qui traite event onclick sur le div.
   //- script.
