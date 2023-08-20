@@ -12,7 +12,8 @@ block content
         a(href="/api/movies/detailMovie/" + movie._id)
           img.fit-div(src=movie.image, alt="Description de l'image")
         h4.center-div #{movie.title}
-        i.fa.fa-trash
+        i.fas.fa-edit.icon-with-space.icon-disabled
+        i.fa.fa-trash.icon-disabled
 
     //- Capter le Event click sur un icône.
     script.
@@ -54,23 +55,29 @@ block content
       {
         checkbox.addEventListener('click', (event) =>
         {
-          var found = false;
-
           // On récupère le checkbox qui est cliqué
           var checkBoxClick = event.target;
           // J'aimerais chercher tous les siblings.
+          // var nextSibling : HTMLElement | null = checkBoxClick.nextElementSibling;
           var nextSibling = checkBoxClick.nextElementSibling;
           // Je veux parcourir tous les siblings et je veux trouver élément <icon>
 
-          while((nextSibling) && (!found)) {
+          while(nextSibling) {
             // Je veux chercher icone et j'ai trouvé.
             if (nextSibling.tagName.toUpperCase() === "I") {
               if (event.target.checked) {
-                nextSibling.style.display = 'block';
-                found = true;
+                // nextSibling.style.display = 'block';
+                nextSibling.style.display = 'inline-block';
+                console.log("check");
+                nextSibling.classList.remove("icon-disabled");
+                nextSibling.classList.add("icon-enabled");
               }
               else {
-                nextSibling.style.display = 'none';
+                console.log("uncheck");
+
+                nextSibling.classList.remove("icon-enabled");
+                nextSibling.classList.add("icon-disabled");
+
               }
             }
             nextSibling = nextSibling.nextElementSibling;

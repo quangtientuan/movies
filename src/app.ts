@@ -5,6 +5,8 @@ import ExpressSession from 'express-session';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import flash from 'express-flash-plus';
+import bodyParser from 'body-parser';
+
 //import * as path from 'path';
 // Importer les routers.
 import { routerMovie } from './router/routerMovie';
@@ -29,9 +31,9 @@ class App {
     // C'est ce répertoire qu'on va mettre les fichiers css et
     // javascript.
     this.expressApp.use(express.static(__dirname + '/public') as express.RequestHandler); 
-
     
     this.expressApp.set('view engine', 'pug');
+    
     //this.expressApp.set('views', path.join(__dirname, 'views')); // Définit le chemin du répertoire des vues
 
     console.log(__dirname);
@@ -42,6 +44,8 @@ class App {
     this.expressApp.use(logger('dev') as express.RequestHandler);
     this.expressApp.use(express.json() as express.RequestHandler);
     this.expressApp.use(express.urlencoded({ extended: false }) as express.RequestHandler);
+    // AJOUT by NQT 20 août 2023.
+    this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     this.expressApp.use(cookieParser());
     this.expressApp.use(flash());
     this.expressApp.use(ExpressSession(
@@ -62,7 +66,7 @@ class App {
     /***
      * Route de base.
      * Affiche la page acceuil.
-     * * http://localhost:3020/
+     * http://localhost:3020/
      */
     router.get('/', (req:Request, res : Response, next : NextFunction) => {
       // Debug.
@@ -75,7 +79,6 @@ class App {
       catch(error){
         console.log(error);
       }
-
     });
 
 
@@ -84,6 +87,7 @@ class App {
     this.expressApp.use('/', router);
 
     // Route pour les movies.
+    // http://localhost:3020/api/movies
     this.expressApp.use('/api/movies', routerMovie.router);
   }
 

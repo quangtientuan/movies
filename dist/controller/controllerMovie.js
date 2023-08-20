@@ -17,20 +17,19 @@ const modelMovie_1 = __importDefault(require("../model/modelMovie"));
 class ControllerMovie {
     constructor() {
     }
-    // ***
-    // * Retourne la liste de movies.
-    // * http://localhost:3020/api/movies
-    // * Méthode    : GET.
-    // ***
+    /**
+     * Link : http://localhost:3020/api/movies
+     * Description: Retourne la liste de movies.
+     * @param req :None
+     * @param res allMovies. Je retourne tous les movies en format HTML.
+     * @param next None
+     */
     listMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // Récupérer tous les films triés par title.
-                // console.log("Entrer dans cette fonction : listeMovie");
-                // On veut trier le titre en ordre ascendant 
+                // On demande le model de retourner tous les movies dans la table movies.
                 const allMovies = yield modelMovie_1.default.find().sort({ title: 1 });
-                //  Patch si le trie ne fonctionne pas.
-                //  allMovies.sort((a, b) => a.title.localeCompare(b.title));
+                // Merci, j'ai reçu tous les movies.
                 res.status(200).render('listMovies', {
                     allMovies: allMovies
                 });
@@ -40,6 +39,13 @@ class ControllerMovie {
             }
         });
     }
+    /**
+     * Lien        : http://localhost:3020/api/movies/createMovies
+     * Description : createMovie with data received.
+     * @param req  : title, sypnosis, filePath, version
+     * @param res  : if success, Movie has been created. Else, error.
+     * @param next : None.
+     */
     createMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -62,7 +68,7 @@ class ControllerMovie {
                         __v: req.body.version
                     };
                     yield modelMovie_1.default.create(movie);
-                    res.status(200).send('readMovie - Insérer un movie dans le db.');
+                    res.status(200).send("Movie has been created.");
                 }
             }
             catch (error) {
@@ -70,25 +76,29 @@ class ControllerMovie {
             }
         });
     }
-    // ***
-    // * Retourne un movie.
-    // * Méthode    : POST.
-    // * Req        : req.param.idMovie.
-    // ***
-    detailMovie(req, res, next) {
+    /**
+     * Lien        : http://localhost:3020/api/movies/detailMovie
+     * Description : Display detailMovies
+     * @param req  : None.
+     * @param res  : detailMovie - Retourne les données (title, synopsis, filePath, version).
+     * @param next : None.
+     * @method     : POST.
+     */
+    postDetailMovie(req, res, next) {
         try {
-            res.status(200).send('detailMovie - retourne un movie dans le db.');
+            res.status(200).send("detailMovie - retourne les infos qui sont dans le db.");
         }
         catch (error) {
         }
     }
-    // ***
-    // * Retourne les informations du film.
-    // * Méthode    : GET.
-    // * Req        : req.param.idMovie.
-    // *////////////////////////////////////////
-    // * Ex: http://localhost:3020/api/movies/64dd29edc1dedd21c9df5bc1
-    // ***
+    /**
+     * Lien        : http://localhost:3020/api/movies/detailMovie/64dd29edc1dedd21c9df5bc1
+     * Description : Display detail of the movies
+     * @param req  : None.
+     * @param res  : readMovie - Retourne les données (title, synopsis, filePath, version)
+     * @param next : None.
+     * @method     : GET.
+     */
     getDetailMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -128,11 +138,18 @@ class ControllerMovie {
         catch (error) {
         }
     }
+    /**
+     * Lien        : http://localhost:3020/api/movies/deleteMovies/64dd29edc1dedd21c9df5bc1
+     * Description : Delete movie from database
+     * @param req  : idMovie.
+     * @param res  : Si le film existe, on supprime. Sinon, not found.
+     * @param next : None.
+     * @method     : DELETE
+     */
     deleteMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const movieId = req.params.idMovie;
-                //console.log("deleteMovie"+movieId);
                 const movie = yield modelMovie_1.default.findByIdAndDelete(movieId);
                 if (movie) {
                     res.status(204).json({ success: 'Film supprimé avec succès' });

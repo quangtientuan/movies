@@ -92,7 +92,28 @@ body {
     color: white;
 }
 
-.fa.fa-trash{
+/* .fa.fa-trash{
     display : none;
     text-align: center;
+} */
+
+.icon-with-space {
+    margin-right: 10px;
 }
+
+/* Styles pour les icônes activées */
+.icon-enabled {
+    color: #007bff;
+    /* Couleur au choix pour les icônes activées (par exemple, bleu) */
+    pointer-events: auto;
+    /* Active les interactions avec l'icône */
+}
+
+/* Styles pour les icônes désactivées */
+.icon-disabled {
+    color: gray;
+    /* Couleur grise par défaut */
+    pointer-events: none;
+    /* Désactive les interactions avec l'icône */
+}
+
