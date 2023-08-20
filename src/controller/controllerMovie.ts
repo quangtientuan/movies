@@ -5,21 +5,19 @@ export class ControllerMovie {
     constructor() {
     }
 
-    // ***
-    // * Retourne la liste de movies.
-    // * http://localhost:3020/api/movies
-    // * Méthode    : GET.
-    // ***
+    /**
+     * Link : http://localhost:3020/api/movies
+     * Description: Retourne la liste de movies.
+     * @param req :None
+     * @param res allMovies. Je retourne tous les movies en format HTML.
+     * @param next None 
+     */
+
     public async listMovie(req: Request, res: Response, next: NextFunction) {
         try {
-            // Récupérer tous les films triés par title.
-            // console.log("Entrer dans cette fonction : listeMovie");
-
-            // On veut trier le titre en ordre ascendant 
+            // On demande le model de retourner tous les movies dans la table movies.
             const allMovies: IMovie[] = await modelMovie.find().sort({ title: 1 });
-
-            //  Patch si le trie ne fonctionne pas.
-            //  allMovies.sort((a, b) => a.title.localeCompare(b.title));
+            // Merci, j'ai reçu tous les movies.
 
             res.status(200).render('listMovies', {
                 allMovies: allMovies
@@ -28,6 +26,14 @@ export class ControllerMovie {
             console.log(error);
         }
     }
+
+    /**
+     * Lien        : http://localhost:3020/api/movies/createMovies
+     * Description : createMovie with data received.
+     * @param req  : title, sypnosis, filePath, version
+     * @param res  : if success, Movie has been created. Else, error.
+     * @param next : None.
+     */
 
     public async createMovie(req: Request, res: Response, next: NextFunction) {
         try {
@@ -51,36 +57,40 @@ export class ControllerMovie {
                 await modelMovie.create(movie);
 
                 res.status(200).send(
-                    'readMovie - Insérer un movie dans le db.');
+                    "Movie has been created.");
             }
         } catch (error) {
             console.log(error);
         }
     }
 
+    /**
+     * Lien        : http://localhost:3020/api/movies/detailMovie
+     * Description : Display detailMovies
+     * @param req  : None.
+     * @param res  : detailMovie - Retourne les données (title, synopsis, filePath, version).
+     * @param next : None.
+     * @method     : POST.
+     */
 
-    // ***
-    // * Retourne un movie.
-    // * Méthode    : POST.
-    // * Req        : req.param.idMovie.
-    // ***
-    public detailMovie(req: Request, res: Response, next: NextFunction) {
+    public postDetailMovie(req: Request, res: Response, next: NextFunction) {
         try {
             res.status(200).send(
-                'detailMovie - retourne un movie dans le db.'
+                "detailMovie - retourne les infos qui sont dans le db."
             );
         } catch (error) {
         }
     }
 
+    /**
+     * Lien        : http://localhost:3020/api/movies/detailMovie/64dd29edc1dedd21c9df5bc1
+     * Description : Display detail of the movies
+     * @param req  : None.
+     * @param res  : readMovie - Retourne les données (title, synopsis, filePath, version)
+     * @param next : None.
+     * @method     : GET.
+     */
 
-    // ***
-    // * Retourne les informations du film.
-    // * Méthode    : GET.
-    // * Req        : req.param.idMovie.
-    // *////////////////////////////////////////
-    // * Ex: http://localhost:3020/api/movies/64dd29edc1dedd21c9df5bc1
-    // ***
     public async getDetailMovie(req: Request, res: Response, next: NextFunction) {
         try {
             const movieId = req.params.idMovie;
@@ -123,6 +133,15 @@ export class ControllerMovie {
         } catch (error) {
         }
     }
+
+    /**
+     * Lien        : http://localhost:3020/api/movies/deleteMovies/64dd29edc1dedd21c9df5bc1
+     * Description : Delete movie from database
+     * @param req  : idMovie.
+     * @param res  : Si le film existe, on supprime. Sinon, not found.
+     * @param next : None.
+     * @method     : DELETE
+     */
 
     public async deleteMovie(req: Request, res: Response, next: NextFunction) {
         try {

@@ -26,47 +26,57 @@ export class RouterMovie {
 
     init() {
         
-        // ***
-        // * Afficher la listes des movies.
-        // * '/' ==> http://localhost:3020/api/movies
-        // * Méthode : GET.
-        // ****
+        /**
+         * Afficher la listes des movies.
+         * On reçoit HTTP Request du navigateur.
+         * http://localhost:3020/api/movies
+         * Méthode : GET.
+         */
+
         this._router.get('/', this._controllerMovie.listMovie.bind(this));
-        // ***
-        // * Insérer un movie.
-        // * http://localhost:3020/api/movies/createMovie
-        // * Méthode : GET.
-        // ****
+
+        /**
+         * On va aller chercher la page /create avec controller
+         * On reçoit HTTP Request du navigateur.
+         * http://localhost:3020/api/createMovie
+         * Méthode : GET.
+         */
+        
         this._router.get('/createMovie', this._controllerMovie.createMovie.bind(this));
 
-        // ***
-        // * Affiche le movie en détail.
-        // * http://localhost:3020/api/movies/detailMovie
-        // * Méthode : POST.
-        // * TODO : Vérifier.
-        // ****
-        this._router.post('/detailMovie', this._controllerMovie.detailMovie.bind(this));
+        // /**
+        //  * Affiche le movie en détail.
+        //  * http://localhost:3020/api/movies/detailMovie
+        //  * Méthode : POST.
+        //  * TODO : Vérifier.
+        //  */
 
-        // ***
-        // * Affiche le movie en détail.
-        // * http://localhost:3020/api/movies/detailMovie
-        // * Méthode : GET.
-        // ****
+        // this._router.post('/detailMovie', this._controllerMovie.postDetailMovie.bind(this));
+
+        /**
+         * Affiche le movie en détail.
+         * http://localhost:3020/api/movies/detailMovie
+         * Méthode : GET.
+         */
         this._router.get('/detailMovie/:idMovie' , this._controllerMovie.getDetailMovie.bind(this));
 
-
+        /**
+         * On route la page /create
+         * On reçoit HTTP Request du navigateur.
+         * http://localhost:3020/api/createMovie
+         * Méthode : POST.
+         */
         this._router.post('/createMovie', this._controllerMovie.createMovie.bind(this));
 
         // this._router.get('/:movieId', this._controllerMovie.readMovie.bind(this));
         // // Post-createMovie.
         // this._router.put('/:movieId', this._controllerMovie.updateMovie.bind(this));
-        // this._router.delete('/:movieId', this._controllerMovie.deleteMovie.bind(this));
 
-        // ***
-        // * Affiche le movie en détail.
-        // * http://localhost:3020/api/movies/detailMovie
-        // * Méthode : GET.
-        // ****
+        /**
+         * Delete movie from db
+         * http://localhost:3020/api/movies/detailMovie
+         * Méthode : DELETE.
+         */
         this._router.delete('/deleteMovie/:idMovie' , this._controllerMovie.deleteMovie.bind(this));
 
     }
