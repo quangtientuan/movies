@@ -26,7 +26,7 @@ class ControllerMovie {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // Récupérer tous les films triés par title.
-                console.log("Entrer dans cette fonction : listeMovie");
+                // console.log("Entrer dans cette fonction : listeMovie");
                 // On veut trier le titre en ordre ascendant 
                 const allMovies = yield modelMovie_1.default.find().sort({ title: 1 });
                 //  Patch si le trie ne fonctionne pas.
@@ -129,11 +129,22 @@ class ControllerMovie {
         }
     }
     deleteMovie(req, res, next) {
-        try {
-            res.status(200).send('deleteMovie - deleteMovie un movie dans le db');
-        }
-        catch (error) {
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const movieId = req.params.idMovie;
+                //console.log("deleteMovie"+movieId);
+                const movie = yield modelMovie_1.default.findByIdAndDelete(movieId);
+                if (movie) {
+                    res.status(204).json({ success: 'Film supprimé avec succès' });
+                }
+                else {
+                    res.status(404).json({ error: 'Movie not found' });
+                }
+            }
+            catch (error) {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        });
     }
 }
 exports.ControllerMovie = ControllerMovie;
