@@ -8,6 +8,7 @@ const express_session_1 = __importDefault(require("express-session"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const express_flash_plus_1 = __importDefault(require("express-flash-plus"));
+const body_parser_1 = __importDefault(require("body-parser"));
 //import * as path from 'path';
 // Importer les routers.
 const routerMovie_1 = require("./router/routerMovie");
@@ -33,6 +34,8 @@ class App {
         this.expressApp.use((0, morgan_1.default)('dev'));
         this.expressApp.use(express_1.default.json());
         this.expressApp.use(express_1.default.urlencoded({ extended: false }));
+        // AJOUT by NQT 20 août 2023.
+        this.expressApp.use(body_parser_1.default.urlencoded({ extended: false }));
         this.expressApp.use((0, cookie_parser_1.default)());
         this.expressApp.use((0, express_flash_plus_1.default)());
         this.expressApp.use((0, express_session_1.default)({
@@ -48,7 +51,7 @@ class App {
         /***
          * Route de base.
          * Affiche la page acceuil.
-         * * http://localhost:3020/
+         * http://localhost:3020/
          */
         router.get('/', (req, res, next) => {
             // Debug.
@@ -65,6 +68,7 @@ class App {
         // Router de base.
         this.expressApp.use('/', router);
         // Route pour les movies.
+        // http://localhost:3020/api/movies
         this.expressApp.use('/api/movies', routerMovie_1.routerMovie.router);
     }
 }
