@@ -50,6 +50,12 @@ class RouterMovie {
         // // Post-createMovie.
         // this._router.put('/:movieId', this._controllerMovie.updateMovie.bind(this));
         // this._router.delete('/:movieId', this._controllerMovie.deleteMovie.bind(this));
+        // ***
+        // * Affiche le movie en détail.
+        // * http://localhost:3020/api/movies/detailMovie
+        // * Méthode : GET.
+        // ****
+        this._router.delete('/deleteMovie/:idMovie', this._controllerMovie.deleteMovie.bind(this));
     }
 }
 exports.RouterMovie = RouterMovie;
