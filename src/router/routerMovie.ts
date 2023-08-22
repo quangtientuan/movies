@@ -19,13 +19,13 @@ export class RouterMovie {
         return this._router;
     }
 
-// Create : POST www.example.com/customers
-// Read : GET www.example.com/customers/3814
-// Update : PUT www.example.com/customers/3814
-// Destroy : DELETE www.example.com/customer/3814
+    // Create : POST www.example.com/customers
+    // Read : GET www.example.com/customers/3814
+    // Update : PUT www.example.com/customers/3814
+    // Destroy : DELETE www.example.com/customer/3814
 
     init() {
-        
+
         /**
          * Afficher la listes des movies.
          * On reçoit HTTP Request du navigateur.
@@ -55,7 +55,7 @@ export class RouterMovie {
          * http://localhost:3020/api/movies/detailMovie/64dd29edc1dedd21c9df5bc1
          * Méthode : GET.
          */
-        this._router.get('/detailMovie/:idMovie' , this._controllerMovie.getDetailMovie.bind(this));
+        this._router.get('/detailMovie/:idMovie', this._controllerMovie.getDetailMovie.bind(this));
 
         /**
          * On route la page /create
@@ -69,7 +69,7 @@ export class RouterMovie {
 
         // this._router.get('/:movieId', this._controllerMovie.readMovie.bind(this));
         // Post-createMovie.
-        
+
         /**
          * Update l'info du movie.
          * http://localhost:3020/api/movies/updateMovie
@@ -84,7 +84,7 @@ export class RouterMovie {
          * http://localhost:3020/api/movies/detailMovie
          * Méthode : DELETE.
          */
-        this._router.delete('/deleteMovie/:idMovie' , this._controllerMovie.deleteMovie.bind(this));
+        this._router.delete('/deleteMovie/:idMovie', this._controllerMovie.deleteMovie.bind(this));
 
     }
 }
