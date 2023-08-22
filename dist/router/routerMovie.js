@@ -34,16 +34,16 @@ class RouterMovie {
          * Méthode : GET.
          */
         this._router.get('/createMovie', this._controllerMovie.createMovie.bind(this));
-        // /**
-        //  * Affiche le movie en détail.
-        //  * http://localhost:3020/api/movies/detailMovie
-        //  * Méthode : POST.
-        //  * TODO : Vérifier.
-        //  */
-        // this._router.post('/detailMovie', this._controllerMovie.postDetailMovie.bind(this));
         /**
          * Affiche le movie en détail.
          * http://localhost:3020/api/movies/detailMovie
+         * Méthode : POST.
+         * Retourne un objet Movie.
+         */
+        this._router.post('/postDetailMovie', this._controllerMovie.postDetailMovie.bind(this));
+        /**
+         * Affiche le movie en détail.
+         * http://localhost:3020/api/movies/detailMovie/64dd29edc1dedd21c9df5bc1
          * Méthode : GET.
          */
         this._router.get('/detailMovie/:idMovie', this._controllerMovie.getDetailMovie.bind(this));
@@ -55,8 +55,14 @@ class RouterMovie {
          */
         this._router.post('/createMovie', this._controllerMovie.createMovie.bind(this));
         // this._router.get('/:movieId', this._controllerMovie.readMovie.bind(this));
-        // // Post-createMovie.
-        // this._router.put('/:movieId', this._controllerMovie.updateMovie.bind(this));
+        // Post-createMovie.
+        /**
+         * Update l'info du movie.
+         * http://localhost:3020/api/movies/updateMovie
+         * Méthode : POST.
+         * Retourne un objet Movie.
+         */
+        this._router.put('/updateMovie', this._controllerMovie.updateMovie.bind(this));
         /**
          * Delete movie from db
          * http://localhost:3020/api/movies/detailMovie

@@ -20,9 +20,10 @@ class ControllerMovie {
     /**
      * Link : http://localhost:3020/api/movies
      * Description: Retourne la liste de movies.
-     * @param req :None
-     * @param res allMovies. Je retourne tous les movies en format HTML.
-     * @param next None
+     * @param req : None
+     * @param res : Retourne la page listMovie qui contient
+     *              tous les movies en format HTML.
+     * @param next: None
      */
     listMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -78,24 +79,34 @@ class ControllerMovie {
     }
     /**
      * Lien        : http://localhost:3020/api/movies/detailMovie
-     * Description : Display detailMovies
+     * Description : Retourne un objet movie.
      * @param req  : None.
-     * @param res  : detailMovie - Retourne les données (title, synopsis, filePath, version).
+     * @param res  : Retourne un objet movie.
      * @param next : None.
      * @method     : POST.
      */
     postDetailMovie(req, res, next) {
-        try {
-            res.status(200).send("detailMovie - retourne les infos qui sont dans le db.");
-        }
-        catch (error) {
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const movieId = req.body.idMovie;
+                const movie = yield modelMovie_1.default.findById(movieId);
+                if (movie) {
+                    res.status(200).send(JSON.stringify(movie));
+                }
+                else {
+                    // Si le film n'est pas trouvé, renvoie une réponse 404
+                    res.status(404).json({ error: 'Movie not found' });
+                }
+            }
+            catch (error) {
+            }
+        });
     }
     /**
      * Lien        : http://localhost:3020/api/movies/detailMovie/64dd29edc1dedd21c9df5bc1
      * Description : Display detail of the movies
      * @param req  : None.
-     * @param res  : readMovie - Retourne les données (title, synopsis, filePath, version)
+     * @param res  : Retourne la page detailMovie en html.
      * @param next : None.
      * @method     : GET.
      */
@@ -131,12 +142,56 @@ class ControllerMovie {
         catch (error) {
         }
     }
+    // ***
+    // * Update un movie en background.
+    // * Méthode    : PUT.
+    // * Req        : req.body
+    // * title
+    // * synopsis
+    // * filePath
+    // * version
+    // ***
     updateMovie(req, res, next) {
-        try {
-            res.status(200).send('updateMovie - update un movie dans le db');
-        }
-        catch (error) {
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idMovie = req.body.idMovieHidden;
+                const movie = {
+                    title: req.body.title,
+                    synopsis: req.body.synopsis,
+                    image: req.body.filePath,
+                    __v: req.body.version
+                };
+                yield modelMovie_1.default.findOneAndUpdate({ _id: idMovie }, // Filtre pour trouver le bon document par son ID
+                movie, // Les modifications que vous souhaitez apporter
+                { new: true } // Pour obtenir la version mise à jour du document
+                )
+                    .then(movieMaj => {
+                    if (!movieMaj) {
+                        res.status(204).send({
+                            success: false,
+                            msg: 'Aucun film trouvé avec cet ID.',
+                        });
+                    }
+                    else {
+                        console.log('Film mis à jour avec succès :', movieMaj);
+                        res.status(200).send({
+                            success: true,
+                            msg: 'Film mis à jour avec succès :',
+                            data: JSON.stringify(movieMaj)
+                        });
+                    }
+                })
+                    .catch(err => {
+                    res.status(500).send({
+                        success: false,
+                        msg: 'Erreur lors de la mise à jour du film',
+                        error: JSON.stringify(err)
+                    });
+                });
+            }
+            catch (error) {
+            }
+        });
     }
     /**
      * Lien        : http://localhost:3020/api/movies/deleteMovies/64dd29edc1dedd21c9df5bc1
