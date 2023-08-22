@@ -15,46 +15,265 @@ block content
         i.fas.fa-edit.icon-with-space.icon-disabled
         i.fa.fa-trash.icon-disabled
 
-    //- Capter le Event click sur un icône.
+  dialog.dialogue-update(id="dialogue-update")
+    //- Div pour la barre de titre
+    div.barre-titre
+      h2 Modifier l'information du film
+      //- button#fermer-dialogue(class="fermer")
+    //- Div pour le formulaire.
+    div.formulaire-edit
+      fieldset
+        legend Information du film
+
+        form(id="formulaire-update-movie", method="POST")
+          input(type="hidden" id="idMovieHidden" name="idMovieHidden")
+        
+          label(for="title") Titre du film 
+          br
+          input(type="text" id="title" name="title" required)
+          br
+          
+          label(for="synopsis") Synopsis
+          br
+          textarea(id="synopsis" name="synopsis" rows="4" required)
+          br
+        
+          input(type="file" id="fileUpload" name="fileUpload" required)
+          br
+          input(type="text" id="filePath" name="filePath" required)
+          br
+
+          // -- Version      
+          label(for="version") Version
+          br
+          input(type="number" id="version" name="version" required)
+          br
+          
+        button#envoyer-dialogue(type="button") Envoyer
+        button#fermer-dialogue(type="button") Fermer
+
+
+    // ***
+    //- Capter le message click sur le checkbox.
+    // ***
     script.
+      ///////////////////////////////////////////////////////////////
+      // Update le formulaire movie.
+      // Écoutez l'événement de soumission du formulaire
+      var btnEnvoyerUpdate = document.getElementById("envoyer-dialogue");
+      btnEnvoyerUpdate.addEventListener('click', function(event) {
+        var formMovie = document.getElementById("formulaire-update-movie");
+        
+        event.preventDefault(); // Empêche le rechargement de la page
+        
+        // Supposons que formData soit votre objet FormData
+        const formData = new FormData(formMovie); // formMovie est une référence à votre formulaire
 
-      var lstIcons = document.querySelectorAll('i');    
+        // Créez un objet JavaScript vide pour stocker les données
+        const formDataObject = {};
 
-      lstIcons.forEach((icon) => {
-        icon.addEventListener('click', function() {
-          let resultat = window.confirm("Are you sure to delete?");
-          if (resultat === false) {
-              console.log("L'utilisateur a annulé.");
+        // Itérez sur les entrées de formData et ajoutez-les à formDataObject
+        formData.forEach((value, key) => {
+          formDataObject[key] = value;
+        });
+
+        // Maintenant, formDataObject est un objet JavaScript contenant les données du formulaire
+        // Vous pouvez le convertir en JSON en utilisant JSON.stringify
+        const formDataJSON = JSON.stringify(formDataObject);
+        console.log(formDataJSON);
+        // alert(formDataJSON);
+
+
+        // Envoyez les données au serveur
+        fetch("/api/movies/updateMovie", {
+          method  : 'PUT', // ou 'PUT' selon votre cas
+          headers : {
+            'Content-Type': 'application/json' // Type de contenu de la requête (dans cet exemple, JSON)
+            },
+          body    : formDataJSON
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json(); // Traitement de la réponse JSON si nécessaire
           } else {
-              const idMovie = this.parentNode.id;
-              fetch("/api/movies/deleteMovie/" + idMovie, {
-                  method: 'DELETE'
-              })
-              .then(response => {
-                  if (response.status === 204) {
-                      // Le film a été supprimé avec succès (204 signifie No Content)
-                      console.log("Film supprimé avec succès.");
-                      this.parentNode.remove();
-                  } else {
-                      // Gérer les erreurs ici
-                      console.error("Erreur lors de la suppression du film.");
-                  }
-              })
-              .catch(error => {
-                  console.error("Une erreur réseau s'est produite.", error);
-              });
+            throw new Error('La requête a échoué.');
+          }
+        })
+        .then((data) => {
+          // Traitez la réponse du serveur, par exemple :
+          if (data.success) {
+            alert('Mise à jour réussie');
+            // Mettez à jour le formulaire avec les nouvelles données si nécessaire
+          } else {
+            alert('Échec de la mise à jour');
+          }
+        })
+        .catch((error) => {
+          console.error('Erreur : ', error);
+        });
+
+      });
+      ///////////////////////////////////////////////////////////////
+
+
+
+
+      ///////////////////////////////////////////////////////////////
+      // * Capter event click sur une icône.
+      var lstIcons = document.querySelectorAll('i');    
+      lstIcons.forEach((icon) => {
+        icon.addEventListener('click', (event) => {
+          // On récupère objet icon qui clique.
+          var iconClick = event.target;
+          var lstClasses = iconClick.classList;
+          // Convertissez la liste en un tableau pour faciliter la manipulation
+          var arrayClasses = Array.from(lstClasses);
+
+          // Maintenant, classesArray contient toutes les classes de l'élément sous forme de tableau
+          if (arrayClasses.includes("fa-edit")) {
+            afficheDialog(iconClick);
+          }
+          else{
+            deleteMovie(iconClick);
+          }
+        }); // addEventListener.
+      }); // forEach
+
+      ///////////////////////////////////////////////////////////////
+      // Envoyer la rêquete HTTP en background.
+      // Créez l'URL de la requête
+      // idMovie : Identificateur du movie.
+      function afficheDialog(iconEdit) {
+        const idMovie = iconEdit.parentNode.id;
+        var url = "/api/movies/postDetailMovie"; // Remplacez par votre URL
+
+        // Options de la requête (par exemple, POST avec des données JSON)
+        var options = {
+          method: 'POST', // Méthode HTTP (GET, POST, PUT, DELETE, etc.)
+          headers: {
+            'Content-Type': 'application/json' // Type de contenu de la requête (dans cet exemple, JSON)
+          },
+          body: JSON.stringify({ idMovie: idMovie }) // Corps de la requête (données à envoyer)
+        };
+
+        // Envoi de la requête en arrière-plan
+        fetch(url, options)
+          .then((response) => {
+            if (response.status === 200) {
+              return response.json(); // Traitement de la réponse JSON si nécessaire
+            } else {
+              throw new Error('La requête a échoué.');
+            }
+          })
+          .then((data) => {
+              // C'est ici on affiche la boîte de dialogue.
+              // Traitement des données de la réponse si nécessaire
+              //console.log(data);
+              let inputTitle = document.getElementById('title');
+              let inputSynopsis = document.getElementById('synopsis');
+              let inputFilePath = document.getElementById('filePath');
+              let inputVersion = document.getElementById('version');
+              let inputIdMovieHidden = document.getElementById('idMovieHidden');
+              
+              inputTitle.value = data.title;
+              inputSynopsis.value = data.synopsis;
+              inputFilePath.value = data.image;
+              inputVersion.value = data.__v;
+              inputIdMovieHidden.value = data._id;
+
+              let dlg = document.getElementById('dialogue-update');
+              dlg.style.display = 'block';
+              dlg.showModal();
+              ///////////////////////////////////////////////////
+            })          
+          .catch((error) => {
+            // Gestion des erreurs
+            console.error('Erreur : ', error);
+          });
+      }
+      ///////////////////////////////////////////////////////////////
+
+
+      // ***
+      //- Bouton qui ferme la boite de dialogue.
+      // ***
+      var boutonFermer = document.getElementById('fermer-dialogue');
+      boutonFermer.addEventListener('click', () => {
+
+        var formMovie = document.getElementById("formulaire-update-movie");
+        // Supposons que formData soit votre objet FormData
+        const formData = new FormData(formMovie); // formMovie est une référence à votre formulaire
+        // Créez un objet JavaScript vide pour stocker les données
+        const formDataObject = {};
+        // Itérez sur les entrées de formData et ajoutez-les à formDataObject
+        formData.forEach((value, key) => {
+          formDataObject[key] = value;
+        });
+        //- const formDataJSON = JSON.stringify(formDataObject);
+        //- console.log(formDataJSON);
+        const idMovie = formDataObject["idMovieHidden"];
+        // Update div avec les données du formulaire.
+        // Sélectionnez le div par son ID.
+        let divMovie  = document.getElementById(idMovie);
+        // Utilisez querySelectorAll pour obtenir tous les éléments enfants du div
+        let enfantsDuDiv = divMovie.querySelectorAll('*');
+
+        // Parcourez les éléments enfants
+        enfantsDuDiv.forEach((enfant) => {
+          if (enfant.tagName.toUpperCase() === "H4") {
+            // Faites quelque chose avec l'élément enfant, par exemple :
+            enfant.textContent = formDataObject["title"];
+          }
+          else if (enfant.tagName.toUpperCase() === "IMG") {
+            enfant.src = formDataObject["filePath"];
           }
         });
-      })
+
+        ////////////////////////////////////////////
+        let dlg = document.getElementById('dialogue-update');
+        dlg.close();
+        dlg.style.display = 'none';
+      });
+
+      // ***
+      //- Fonction qui fait le delete un movie.
+      // ***
+      function deleteMovie(iconDelete){
+        let resultat = window.confirm("Are you sure to delete?");
+        if (resultat === false) {
+            console.log("L'utilisateur a annulé.");
+        } else {
+            const idMovie = iconDelete.parentNode.id;
+            fetch("/api/movies/deleteMovie/" + idMovie, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.status === 204) {
+                    // Le film a été supprimé avec succès 
+                    // (204 signifie No Content)
+                    console.log("Film supprimé avec succès.");
+                    iconDelete.parentNode.remove();
+                } else {
+                    // Gérer les erreurs ici
+                    console.error("Erreur lors de la suppression du film.");
+                }
+            })
+            .catch(error => {
+                console.error("Une erreur réseau s'est produite.", error);
+            });
+        }
+      }
  
       // ***
-      //-  Capter le message click sur le checkbox.
+      //- Capter le message click sur le checkbox.
       // ***
+      ///////////////////////////////////////////////////////////////
       var checkboxes = document.querySelectorAll('input[type="checkbox"]');
       for (var checkbox of checkboxes)
       {
         checkbox.addEventListener('click', (event) =>
         {
+          // alert("checkbox clique");
           // On récupère le checkbox qui est cliqué
           var checkBoxClick = event.target;
           // J'aimerais chercher tous les siblings.
@@ -85,36 +304,3 @@ block content
         });
      }
 
-  //- Script qui traite event onclick sur le div.
-  //- script.
-  //-   function divClick(elemDiv) {
-  //-      // Phase de "bubbling" (remontée)
-  //-     elemDiv.addEventListener('click', function() {
-  //-       // Rediriger vers une nouvelle URL
-  //-       const idMovie = elemDiv.id;
-  //-       window.location.href = "http://localhost:3020/api/movies/detailMovie/" + idMovie;
-        
-
-  //-       //console.log("Clic sur le bouton");
-  //-     });
-
-    };
-
-
-      //- /////////////////////////////////////////////////////////////////////////////////
-      //- // TODO : Comprendre le code après.
-      //- // Exemple avec l'API Fetch pour une redirection avec une méthode HTTP spécifique
-      //- fetch("api/movies/detailMovie", {
-      //-   method: "POST", // Utilisez la méthode HTTP souhaitée (GET, POST, PUT, DELETE, etc.)
-      //-   ////////////////////////////////////////////////////////////////////////////////
-      //-   // On peut envoyer les donnés au serveur.
-      //-   ////////////////////////////////////////////////////////////////////////////////
-      //- })
-      //- .then(response => {
-      //-   // Traitez la réponse si nécessaire
-      //-   // Ensuite, effectuez la redirection
-      //-   window.location.href = response.url;
-      //- })
-      //- .catch(error => {
-      //-   console.error("Erreur lors de la requête :", error);
-      //- });
