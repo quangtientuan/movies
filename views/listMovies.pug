@@ -27,6 +27,7 @@ block content
 
         form(id="formulaire-update-movie", method="POST")
           input(type="hidden" id="idMovieHidden" name="idMovieHidden")
+          input(type="hidden" id="movieUpdate" name="movieUpdate")
         
           label(for="title") Titre du film 
           br
@@ -57,6 +58,8 @@ block content
     //- Capter le message click sur le checkbox.
     // ***
     script.
+
+
       ///////////////////////////////////////////////////////////////
       // Update le formulaire movie.
       // Écoutez l'événement de soumission du formulaire
@@ -196,11 +199,12 @@ block content
 
       // ***
       //- Bouton qui ferme la boite de dialogue.
+      //- c'EST ICI LE BUG.
       // ***
       var boutonFermer = document.getElementById('fermer-dialogue');
       boutonFermer.addEventListener('click', () => {
 
-        var formMovie = document.getElementById("formulaire-update-movie");
+        const formMovie = document.getElementById("formulaire-update-movie");
         // Supposons que formData soit votre objet FormData
         const formData = new FormData(formMovie); // formMovie est une référence à votre formulaire
         // Créez un objet JavaScript vide pour stocker les données
