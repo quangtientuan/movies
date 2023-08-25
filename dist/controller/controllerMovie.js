@@ -31,6 +31,7 @@ class ControllerMovie {
                 // On demande le model de retourner tous les movies dans la table movies.
                 const allMovies = yield modelMovie_1.default.find().sort({ title: 1 });
                 // Merci, j'ai reçu tous les movies.
+                // Render = générer page html
                 res.status(200).render('listMovies', {
                     allMovies: allMovies
                 });
@@ -51,6 +52,7 @@ class ControllerMovie {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (req.method === 'GET') {
+                    // Render {}, vide, car on ne passe pas les données
                     res.status(200).render('createMovie', {});
                 }
                 else if (req.method === 'POST') {
@@ -85,6 +87,7 @@ class ControllerMovie {
      * @param next : None.
      * @method     : POST.
      */
+    // movie = "{ id: 100, title = "abc"}"
     postDetailMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -142,19 +145,19 @@ class ControllerMovie {
         catch (error) {
         }
     }
-    // ***
-    // * Update un movie en background.
-    // * Méthode    : PUT.
-    // * Req        : req.body
-    // * title
-    // * synopsis
-    // * filePath
-    // * version
-    // ***
+    /**
+     * Update un movie en background.
+     * @param req req.body.idMovie, title, sypnosis, image et version
+     * @param res return if movie exists or not
+     * @param next none
+     * @method PUT
+     */
     updateMovie(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const idMovie = req.body.idMovieHidden;
+                // On envoie la requête HTTP au serveur avec la méthode PUT.
+                // Pour récupérer on va utiliser req.body. 
                 const movie = {
                     title: req.body.title,
                     synopsis: req.body.synopsis,
@@ -165,19 +168,19 @@ class ControllerMovie {
                 movie, // Les modifications que vous souhaitez apporter
                 { new: true } // Pour obtenir la version mise à jour du document
                 )
-                    .then(movieMaj => {
-                    if (!movieMaj) {
+                    .then(movieUpdate => {
+                    if (!movieUpdate) {
                         res.status(204).send({
                             success: false,
                             msg: 'Aucun film trouvé avec cet ID.',
                         });
                     }
                     else {
-                        console.log('Film mis à jour avec succès :', movieMaj);
+                        console.log('Film mis à jour avec succès :', movieUpdate);
                         res.status(200).send({
                             success: true,
                             msg: 'Film mis à jour avec succès :',
-                            data: JSON.stringify(movieMaj)
+                            movieUpdate: JSON.stringify(movieUpdate)
                         });
                     }
                 })
