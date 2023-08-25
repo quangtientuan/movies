@@ -1,8 +1,7 @@
 extends layout
 
 block content
-  h1 Afficher la liste des films
-  p C'est le contenu de la liste des films.
+  h1 List of movies
   p Nombre de films :  #{allMovies.length}
   //- const allMovies : IMovie[]
   div
@@ -19,7 +18,7 @@ block content
     //- Div pour la barre de titre
     div.barre-titre
       h2 Modifier l'information du film
-      //- button#fermer-dialogue(class="fermer")
+      //- button#annuler-dialogue(class="annuler")
     //- Div pour le formulaire.
     div.formulaire-edit
       fieldset
@@ -27,7 +26,7 @@ block content
 
         form(id="formulaire-update-movie", method="POST")
           input(type="hidden" id="idMovieHidden" name="idMovieHidden")
-          input(type="hidden" id="movieUpdate" name="movieUpdate")
+          input(type="hidden" id="movieUpdate" name="movieUpdate" value="undefined")
         
           label(for="title") Titre du film 
           br
@@ -51,73 +50,13 @@ block content
           br
           
         button#envoyer-dialogue(type="button") Envoyer
-        button#fermer-dialogue(type="button") Fermer
+        button#annuler-dialogue(type="button") Annuler
 
 
     // ***
     //- Capter le message click sur le checkbox.
     // ***
     script.
-
-
-      ///////////////////////////////////////////////////////////////
-      // Update le formulaire movie.
-      // Écoutez l'événement de soumission du formulaire
-      var btnEnvoyerUpdate = document.getElementById("envoyer-dialogue");
-      btnEnvoyerUpdate.addEventListener('click', function(event) {
-        var formMovie = document.getElementById("formulaire-update-movie");
-        
-        event.preventDefault(); // Empêche le rechargement de la page
-        
-        // Supposons que formData soit votre objet FormData
-        const formData = new FormData(formMovie); // formMovie est une référence à votre formulaire
-
-        // Créez un objet JavaScript vide pour stocker les données
-        const formDataObject = {};
-
-        // Itérez sur les entrées de formData et ajoutez-les à formDataObject
-        formData.forEach((value, key) => {
-          formDataObject[key] = value;
-        });
-
-        // Maintenant, formDataObject est un objet JavaScript contenant les données du formulaire
-        // Vous pouvez le convertir en JSON en utilisant JSON.stringify
-        const formDataJSON = JSON.stringify(formDataObject);
-        console.log(formDataJSON);
-        // alert(formDataJSON);
-
-
-        // Envoyez les données au serveur
-        fetch("/api/movies/updateMovie", {
-          method  : 'PUT', // ou 'PUT' selon votre cas
-          headers : {
-            'Content-Type': 'application/json' // Type de contenu de la requête (dans cet exemple, JSON)
-            },
-          body    : formDataJSON
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json(); // Traitement de la réponse JSON si nécessaire
-          } else {
-            throw new Error('La requête a échoué.');
-          }
-        })
-        .then((data) => {
-          // Traitez la réponse du serveur, par exemple :
-          if (data.success) {
-            alert('Mise à jour réussie');
-            // Mettez à jour le formulaire avec les nouvelles données si nécessaire
-          } else {
-            alert('Échec de la mise à jour');
-          }
-        })
-        .catch((error) => {
-          console.error('Erreur : ', error);
-        });
-
-      });
-      ///////////////////////////////////////////////////////////////
-
 
 
 
@@ -195,49 +134,106 @@ block content
           });
       }
       ///////////////////////////////////////////////////////////////
-
-
-      // ***
-      //- Bouton qui ferme la boite de dialogue.
-      //- c'EST ICI LE BUG.
-      // ***
-      var boutonFermer = document.getElementById('fermer-dialogue');
-      boutonFermer.addEventListener('click', () => {
-
-        const formMovie = document.getElementById("formulaire-update-movie");
+      ///////////////////////////////////////////////////////////////
+      // Update le formulaire movie.
+      // Écoutez l'événement de soumission du formulaire
+      var btnEnvoyerUpdate = document.getElementById("envoyer-dialogue");
+      btnEnvoyerUpdate.addEventListener('click', function(event) {
+        var formMovie = document.getElementById("formulaire-update-movie");
+        
+        event.preventDefault(); // Empêche le rechargement de la page
+        
         // Supposons que formData soit votre objet FormData
         const formData = new FormData(formMovie); // formMovie est une référence à votre formulaire
+
         // Créez un objet JavaScript vide pour stocker les données
         const formDataObject = {};
+
         // Itérez sur les entrées de formData et ajoutez-les à formDataObject
         formData.forEach((value, key) => {
           formDataObject[key] = value;
         });
-        //- const formDataJSON = JSON.stringify(formDataObject);
-        //- console.log(formDataJSON);
-        const idMovie = formDataObject["idMovieHidden"];
-        // Update div avec les données du formulaire.
-        // Sélectionnez le div par son ID.
-        let divMovie  = document.getElementById(idMovie);
-        // Utilisez querySelectorAll pour obtenir tous les éléments enfants du div
-        let enfantsDuDiv = divMovie.querySelectorAll('*');
 
-        // Parcourez les éléments enfants
-        enfantsDuDiv.forEach((enfant) => {
-          if (enfant.tagName.toUpperCase() === "H4") {
-            // Faites quelque chose avec l'élément enfant, par exemple :
-            enfant.textContent = formDataObject["title"];
+        // Maintenant, formDataObject est un objet JavaScript contenant les données du formulaire
+        // Vous pouvez le convertir en JSON en utilisant JSON.stringify
+        const formDataJSON = JSON.stringify(formDataObject);
+        // console.log(formDataJSON);
+        // alert(formDataJSON);
+
+
+        // Envoyez les données au serveur / router
+        fetch("/api/movies/updateMovie", {
+          method  : 'PUT', // PUT, car on veut mettre à jour dans la base de données
+          headers : {
+            'Content-Type': 'application/json' // Type de contenu de la requête (dans cet exemple, JSON)
+            },
+          body    : formDataJSON
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json(); // Traitement de la réponse JSON si nécessaire
+          } else {
+            throw new Error('La requête a échoué.');
           }
-          else if (enfant.tagName.toUpperCase() === "IMG") {
-            enfant.src = formDataObject["filePath"];
+        })
+        .then((data) => {
+          // Traitez la réponse du serveur, par exemple :
+          if (data.success) {
+            // TODO : C'est ici on va sauvegarder le movie dans le input hidden.
+            const movieHidden = document.getElementById("movieUpdate");
+            movieHidden.value = data.movieUpdate;
+
+           alert('Mise à jour réussie');
+            // Mettez à jour le formulaire avec les nouvelles données si nécessaire.
+
+          } else {
+            alert('Échec de la mise à jour');
           }
+        })
+        .catch((error) => {
+          console.error('Erreur : ', error);
         });
+      });
+
+      ///////////////////////////////////////////////////////////////
+
+      var boutonAnnuler = document.getElementById('annuler-dialogue');
+      boutonAnnuler.addEventListener('click', () => {
+
+        const movieHidden = document.getElementById("movieUpdate");
+        const dataMovieUpdate = movieHidden.value;
+
+        if (dataMovieUpdate != "undefined") {
+
+          // Conversion string JSON en objet JavaScript.
+          const dataMovieObj = JSON.parse(dataMovieUpdate);
+          // Récupérer idMovie.
+          const idMovie = dataMovieObj._id;
+          //console.log(idMovie);
+
+          // Update div avec les données du formulaire.
+          // Sélectionnez le div par son ID.
+          const divMovie  = document.getElementById(idMovie);
+          // Utilisez querySelectorAll pour obtenir tous les éléments enfants du div
+          let enfantsDuDiv = divMovie.querySelectorAll('*');
+
+          // Parcourez les éléments enfants
+          enfantsDuDiv.forEach((enfant) => {
+            if (enfant.tagName.toUpperCase() === "H4") {
+              // Faites quelque chose avec l'élément enfant, par exemple :
+              enfant.textContent = dataMovieObj.title;
+            }
+            else if (enfant.tagName.toUpperCase() === "IMG") {
+              enfant.src = dataMovieObj.image;
+            }
+          }); // End forEach
+        }
 
         ////////////////////////////////////////////
         let dlg = document.getElementById('dialogue-update');
         dlg.close();
         dlg.style.display = 'none';
-      });
+      }); // End AddEventListener.
 
       // ***
       //- Fonction qui fait le delete un movie.
@@ -267,7 +263,7 @@ block content
             });
         }
       }
- 
+
       // ***
       //- Capter le message click sur le checkbox.
       // ***
@@ -289,7 +285,6 @@ block content
             // Je veux chercher icone et j'ai trouvé.
             if (nextSibling.tagName.toUpperCase() === "I") {
               if (event.target.checked) {
-                // nextSibling.style.display = 'block';
                 nextSibling.style.display = 'inline-block';
                 console.log("check");
                 nextSibling.classList.remove("icon-disabled");
@@ -297,14 +292,11 @@ block content
               }
               else {
                 console.log("uncheck");
-
                 nextSibling.classList.remove("icon-enabled");
                 nextSibling.classList.add("icon-disabled");
-
               }
             }
             nextSibling = nextSibling.nextElementSibling;
           }
         });
-     }
-
+      }
