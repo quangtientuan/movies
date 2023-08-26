@@ -1,5 +1,5 @@
 h1 {
-    color: blue;
+    color: white;
     text-align: center;
 }
 
@@ -145,7 +145,7 @@ body {
     padding: 10px;
 }
 
-.fermer {
+.annuler {
     background: none;
     border: none;
     color: #fff;
